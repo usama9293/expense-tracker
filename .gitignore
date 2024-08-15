@@ -1,0 +1,14 @@
+
+# ignore node modules
+node_modules/
+
+# ignore build files
+build/
+
+# ignore dist files
+dist/
+
+# ignore coverage files
+coverage/
+
+env/
