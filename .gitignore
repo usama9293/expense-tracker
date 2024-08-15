@@ -11,4 +11,4 @@ dist/
 # ignore coverage files
 coverage/
 
-env/
+.env/
