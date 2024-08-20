@@ -3,7 +3,7 @@ import express from "express";
 import errorHandler from "./handlers/error.js";
 import connectDB from "./config/db.js";
 import userRouter from "./modules/user/userRoute.js";
-
+import transactionRouter from "./modules/transction/transctionRoute.js";
 const app = express();
 
 // Connect to the database
@@ -14,6 +14,7 @@ app.use(express.json());
 
 // Define API routes
 app.use("/api", userRouter);
+app.use("/api", transactionRouter);
 
 // Error handling middleware (should be after all routes)
 app.use(errorHandler);
