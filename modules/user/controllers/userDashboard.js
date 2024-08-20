@@ -1,5 +1,30 @@
-const userDashboard = (req, res) => {
-  console.log(req.user);
+import User from "../../../model/userModel.js";
+
+const userDashboard = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    // Find the user by ID and exclude the password field
+    const user = await User.findById(userId).select("-password").exec();
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+        status: "failed",
+      });
+    }
+
+    return res.status(200).json({
+      message: "User details",
+      status: "success",
+      data: user,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: "An error occurred while fetching user details",
+      status: "failed",
+    });
+  }
 };
 
 export default userDashboard;
