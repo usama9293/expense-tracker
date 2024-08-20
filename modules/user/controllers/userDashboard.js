@@ -1,5 +1,5 @@
 const userDashboard = (req, res) => {
-  res.send("User Dashboard");
+  console.log(req.user);
 };
 
 export default userDashboard;
