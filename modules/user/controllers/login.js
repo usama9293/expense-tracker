@@ -2,6 +2,7 @@ import User from "../../../model/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import jwtManager from "../../../managers/jwtManager.js";
 dotenv.config();
 
 const logIn = async (req, res, next) => {
@@ -32,15 +33,7 @@ const logIn = async (req, res, next) => {
     }
 
     // Generate JWT token
-    const accessToken = jwt.sign(
-      {
-        id: user._id,
-        name: user.username, // Keeping only necessary information
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
-
+    const accessToken = jwtManager(user);
     // Send response
     res.status(200).json({
       message: "User logged in successfully",

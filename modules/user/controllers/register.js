@@ -1,6 +1,7 @@
 import User from "./../../../model/userModel.js";
 import bcrypt from "bcryptjs";
-
+import jwt from "jsonwebtoken";
+import jwtManager from "./../../../managers/jwtManager.js";
 const register = async (req, res, next) => {
   const { username, email, password, confirmPassword, balance } = req.body;
 
@@ -31,20 +32,24 @@ const register = async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create a new user
-    const user = new User({
+    const CreateUser = new User({
       username,
       email,
       password: hashedPassword, // Save the hashed password
       balance,
     });
-
+    const accessToken =  jwtManager(CreateUser);
     // Save the user to the database
-    const savedUser = await user.save();
+    const savedUser = await CreateUser.save();
 
     // Respond with the created user
     res
       .status(201)
-      .json({ message: "User registered successfully", user: savedUser });
+      .json({
+        message: "User registered successfully",
+        user: savedUser,
+        accessToken,
+      });
   } catch (err) {
     // Pass the error to the error handler
     next(err);
