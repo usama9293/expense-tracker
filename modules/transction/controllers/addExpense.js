@@ -2,7 +2,7 @@ import Transction from "../../../model/transaModel.js";
 import User from "../../../model/userModel.js";
 import validator from "validator";
 
-const addIncome = async (req, res, next) => {
+const addExpense = async (req, res, next) => {
   const { amount, remarks } = req.body;
 
   try {
@@ -50,30 +50,30 @@ const addIncome = async (req, res, next) => {
         .json({ message: "User not found", status: "failed" });
     }
 
-    // Update the user's balance
-    user.balance += Number(amount);
+    // Subtract the expense amount from the user's balance
+    user.balance -= Number(amount);
     await user.save();
 
     // Create a new transaction
-    const newIncome = new Transction({
+    const newExpense = new Transction({
       amount,
       remarks,
-      transction_type: "income",
+      transction_type: "expense",
       user_id: req.user.id,
     });
 
     // Save the transaction
-    const savedIncome = await newIncome.save();
+    const savedExpense = await newExpense.save();
 
-    // Respond with the saved income
+    // Respond with the saved expense
     return res.status(200).json({
-      message: "Income added successfully",
+      message: "Expense added successfully",
       status: "success",
-      income: savedIncome,
+      expense: savedExpense,
     });
   } catch (err) {
     next(err);
   }
 };
 
-export default addIncome;
+export default addExpense;
