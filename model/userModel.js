@@ -20,7 +20,9 @@ const userSchema = new mongoose.Schema(
       default: 0,
       required: [true, "balance is required"],
     },
-    // Remove the extra opening curly brace
+    reset_code: {
+      type: Number,
+    },
   },
   {
     timestamps: true,
