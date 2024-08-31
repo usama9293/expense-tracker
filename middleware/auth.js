@@ -21,7 +21,7 @@ const auth = async (req, res, next) => {
       id: decoded.id,
       name: decoded.name,
     }; // Set req.user with only necessary data
-    console.log("req.user after assignment:", req.user); // Log req.user
+   
 
     next();
   } catch (err) {

@@ -1,4 +1,4 @@
-import User from "../../model/userModel.js";
+import User from "../../../model/userModel.js";
 import nodemailer from "nodemailer";
 
 const forgotPassword = async (req, res) => {
