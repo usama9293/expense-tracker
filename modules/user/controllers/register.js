@@ -2,7 +2,8 @@ import User from "./../../../model/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import jwtManager from "./../../../managers/jwtManager.js";
-import nodemailer from "nodemailer";
+
+import emailManager from "../../../managers/emailManager.js";
 const register = async (req, res, next) => {
   const { username, email, password, confirmPassword, balance } = req.body;
 
@@ -42,22 +43,13 @@ const register = async (req, res, next) => {
     const accessToken = jwtManager(CreateUser);
     // Save the user to the database
     const savedUser = await CreateUser.save();
-    var transport = nodemailer.createTransport({
-      host: "sandbox.smtp.mailtrap.io",
-      port: 2525,
-      auth: {
-        user: "c562d498f053ef",
-        pass: "93d62d05820e6b",
-      },
-    });
 
-    transport.sendMail({
-      to: email,
-      from: "info@gmail.com",
-      subject: "Welcome to our platform",
-      html: "<h1>Welcome to our platform</h1>",
-      text: "Welcome to our platform, we are excited to have you on board",
-    });
+    emailManager(
+      email,
+      "Welcome to our platform",
+      "<h1>Welcome to our platform</h1>",
+      "Welcome to our platform, we are excited to have you on board"
+    );
 
     // Respond with the created user
     res.status(201).json({

@@ -1,8 +1,9 @@
 import User from "../../../model/userModel.js";
-import nodemailer from "nodemailer";
+import emailManager from "../../../managers/emailManager.js";
 
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
+
   if (!email) {
     return res
       .status(400)
@@ -11,6 +12,7 @@ const forgotPassword = async (req, res) => {
 
   try {
     const user = await User.findOne({ email });
+
     if (!user) {
       return res
         .status(400)
@@ -24,36 +26,23 @@ const forgotPassword = async (req, res) => {
     user.reset_code = resetCode;
     await user.save();
 
-    // Setup nodemailer transport
-    const transport = nodemailer.createTransport({
-      host: "sandbox.smtp.mailtrap.io",
-      port: 2525,
-      auth: {
-        user: "c562d498f053ef",
-        pass: "93d62d05820e6b",
-      },
-    });
+    // Send the password reset email with the token
+    const emailSent = await emailManager(
+      email,
+      "Password Reset Request",
+      `<h1>Password Reset</h1><p>Your password reset code is: <strong>${resetCode}</strong></p>`,
+      `Your password reset code is: ${resetCode}`
+    );
 
-    // Send the reset code email
-    const mailOptions = {
-      to: email,
-      from: "info@gmail.com",
-      subject: "Password Reset Request",
-      html: `<h1>Password Reset</h1><p>Your password reset code is: <strong>${resetCode}</strong></p>`,
-      text: `Your password reset code is: ${resetCode}`,
-    };
-
-    transport.sendMail(mailOptions, (err, info) => {
-      if (err) {
-        return res
-          .status(500)
-          .json({ message: "Error sending email", status: "failed" });
-      }
-
+    if (!emailSent) {
       return res
-        .status(200)
-        .json({ message: "Password reset email sent", status: "success" });
-    });
+        .status(500)
+        .json({ message: "Error sending email", status: "failed" });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "Password reset email sent", status: "success" });
   } catch (error) {
     return res
       .status(500)
