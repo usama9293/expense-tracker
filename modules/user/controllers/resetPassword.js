@@ -1,4 +1,5 @@
-import User from "../../../model/userModel";
+import User from "../../../model/userModel.js";
+import bcrypt from "bcryptjs";
 
 const resetPassword = async (req, res) => {
   const { email, new_password, reset_code } = req.body;
