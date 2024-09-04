@@ -1,3 +1,4 @@
+import emailManager from "../../../managers/emailManager.js";
 import User from "../../../model/userModel.js";
 import bcrypt from "bcryptjs";
 
@@ -28,6 +29,12 @@ const resetPassword = async (req, res) => {
     }
   );
 
+  await emailManager(
+    email,
+    "Password Reset",
+    "<h1>Password Reset</h1><p>Your password has been reset successfully</p>",
+    "Your password has been reset successfully"
+  );
   res.status(200).json({
     status: "sucess",
     message: "password reset sucessfully",
